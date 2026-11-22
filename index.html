@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>vv13.legend — КВ. №8. ОДИН ДЕНЬ. ОДНЕ ЗЛО.</title>
+<style>
+  :root {
+    --bg: #07070d;
+    --bg2: #0b0b14;
+    --ink: #c9c2b2;
+    --dim: #7d7466;
+    --red: #a32c22;
+    --amber: #ff9d3c;
+    --green: #7ec96a;
+    --pink: #ff4fa3;
+    --line: rgba(190,195,205,.14);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: monospace; }
+  body { background-image: linear-gradient(rgba(255,255,255,.022) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.022) 1px, transparent 1px); background-size: 44px 44px; }
+  a { color: var(--amber); }
+  .wrap { max-width: 1020px; margin: 0 auto; padding: 0 18px 60px; }
+
+  /* ---------- верх ---------- */
+  .topbar { position: sticky; top: 0; z-index: 30; display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; background: rgba(7,7,13,.92); border-bottom: 1px solid var(--line); backdrop-filter: blur(4px); }
+  .topbar .t { font-size: 12px; letter-spacing: .22em; color: var(--dim); }
+  .topbar .t b { color: var(--ink); }
+  .topbtn { cursor: pointer; font-size: 11px; letter-spacing: .18em; border: 1px solid rgba(190,195,205,.25); padding: 7px 14px; color: var(--ink); user-select: none; }
+  .topbtn:hover { background: rgba(163,44,34,.3); border-color: var(--red); }
+
+  header.hero { text-align: center; padding: 44px 0 26px; }
+  .tags { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 18px; }
+  .tag { font-size: 10px; letter-spacing: .22em; border: 1px solid var(--line); padding: 4px 10px; color: var(--dim); }
+  .tag.hot { color: var(--amber); border-color: rgba(255,157,60,.4); }
+  h1.logo { margin: 0; font-size: clamp(34px, 9vw, 74px); letter-spacing: .14em; color: #e6ddc8; text-shadow: 0 0 26px rgba(163,44,34,.35); }
+  h1.logo b { color: var(--red); }
+  .slogan { margin-top: 14px; font-size: clamp(11px, 2.6vw, 15px); letter-spacing: .38em; color: var(--dim); }
+  .art { max-width: 720px; margin: 26px auto 0; font-size: 13px; line-height: 1.85; color: var(--ink); opacity: .92; text-align: left; }
+  .art i { color: var(--amber); font-style: normal; }
+  .art .d { opacity: .65; }
+
+  /* ---------- консоль ---------- */
+  .console { margin: 34px auto 0; max-width: 900px; border: 1px solid #23232f; border-radius: 18px; background: linear-gradient(180deg, #101018, #0a0a10); padding: 16px 18px 18px; box-shadow: 0 24px 70px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.05); }
+  .console-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .console-head .model { font-size: 11px; letter-spacing: .3em; color: var(--dim); }
+  .console-head .model b { color: var(--ink); }
+  .console-head .leds { display: flex; gap: 10px; align-items: center; font-size: 9px; letter-spacing: .18em; color: var(--dim); }
+  .led { width: 8px; height: 8px; border-radius: 50%; background: #23232b; display: inline-block; margin-right: 4px; vertical-align: middle; }
+  .led.on { background: var(--green); box-shadow: 0 0 8px var(--green); }
+  .screen { position: relative; border-radius: 10px; overflow: hidden; background: #000; border: 1px solid #1c1c26; aspect-ratio: 16 / 9; }
+  .screen::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0,0,0,.16) 0 2px, transparent 2px 4px); mix-blend-mode: overlay; opacity: var(--crt, .5); }
+  .screen .vign { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.5) 100%); }
+  #stage { position: fixed; inset: 0; z-index: 50; background: #000; display: none; }
+  #stage.on { display: block; }
+  #gframe { width: 100%; height: 100%; border: 0; background: #000; }
+  .screen .poster { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; background: repeating-linear-gradient(0deg, rgba(255,255,255,.02) 0 2px, transparent 2px 4px), #050508; }
+  .screen .poster .p1 { font-size: clamp(18px, 4.6vw, 34px); letter-spacing: .18em; color: #e6ddc8; }
+  .screen .poster .p1 b { color: var(--red); }
+  .screen .poster .p2 { font-size: 10px; letter-spacing: .3em; color: #5e584c; }
+  .screen .poster .menu { margin-top: 10px; font-size: 12px; letter-spacing: .16em; color: #9a917f; line-height: 2.1; text-align: center; }
+  .screen .poster .menu b { color: var(--amber); }
+  .screen.off .poster { display: flex; }
+  .console-foot { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin-top: 14px; flex-wrap: wrap; }
+  .playbtn { cursor: pointer; user-select: none; font-size: 15px; letter-spacing: .3em; padding: 15px 40px; color: #ffd98a; background: rgba(163,44,34,.35); border: 1px solid var(--red); text-align: center; }
+  .playbtn:hover { background: rgba(163,44,34,.6); box-shadow: 0 0 24px rgba(163,44,34,.5); }
+  .quitbtn { cursor: pointer; user-select: none; font-size: 11px; letter-spacing: .18em; padding: 10px 18px; color: var(--dim); border: 1px solid var(--line); display: none; }
+  .quitbtn.on { display: block; }
+  .quitbtn:hover { color: var(--ink); }
+  .crt { display: flex; gap: 12px; align-items: center; font-size: 10px; letter-spacing: .16em; color: var(--dim); }
+  .crt input[type=range] { accent-color: var(--amber); width: 120px; }
+  .fsbtn { cursor: pointer; border: 1px solid var(--line); padding: 6px 10px; user-select: none; }
+  .fsbtn:hover { color: var(--ink); }
+
+  /* ---------- секції інфо ---------- */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 30px; }
+  @media (max-width: 720px) { .grid2 { grid-template-columns: 1fr; } }
+  .card { border: 1px solid var(--line); background: var(--bg2); padding: 18px 20px; }
+  .card h3 { margin: 0 0 12px; font-size: 12px; letter-spacing: .26em; color: var(--amber); }
+  .card p, .card li { font-size: 12px; line-height: 1.8; color: var(--ink); opacity: .9; }
+  .card ul { margin: 0; padding-left: 18px; }
+  .card .k { color: #e8d9b8; background: rgba(255,217,138,.08); border: 1px solid rgba(255,217,138,.22); padding: 0 6px; }
+  .acts { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 30px; }
+  @media (max-width: 720px) { .acts { grid-template-columns: 1fr; } }
+  .act { border: 1px solid var(--line); background: var(--bg2); padding: 16px 18px; }
+  .act .n { font-size: 10px; letter-spacing: .3em; color: var(--dim); }
+  .act .t { font-size: 15px; letter-spacing: .12em; color: #e6ddc8; margin: 8px 0 8px; }
+  .act .t b { color: var(--red); }
+  .act p { margin: 0; font-size: 11.5px; line-height: 1.75; color: var(--ink); opacity: .85; }
+
+  /* ---------- студія ---------- */
+  .studio { margin-top: 44px; border: 1px solid #2a1f33; background: linear-gradient(180deg, #0d0a14, #080610); padding: 26px 24px; display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+  .st-logo { font-size: clamp(16px, 3.4vw, 22px); letter-spacing: .22em; color: var(--pink); text-shadow: 0 0 18px rgba(255,79,163,.45); white-space: nowrap; }
+  .st-logo small { display: block; font-size: 9px; letter-spacing: .4em; color: #5e584c; margin-top: 6px; text-shadow: none; }
+  .st-info { flex: 1 1 300px; font-size: 11px; line-height: 2; color: var(--ink); opacity: .85; letter-spacing: .08em; }
+  .st-info b { color: #e8d9b8; }
+  .st-badges { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+  .badge { font-size: 10px; letter-spacing: .18em; border: 1px solid var(--line); padding: 5px 10px; color: var(--dim); }
+  .badge.mature { color: #ffd98a; border-color: rgba(255,217,138,.4); font-weight: bold; }
+  .credits { margin-top: 18px; font-size: 10px; letter-spacing: .06em; color: #5e584c; line-height: 1.9; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="t"><b>vv13.legend</b> · v1.6</div>
+  <div class="topbtn" id="quit">✖ ВИЙТИ З ГРИ</div>
+</div>
+
+<div class="wrap">
+
+  <header class="hero">
+    <div class="tags">
+      <span class="tag hot">PS1-STYLE HORROR</span>
+      <span class="tag">3D · ВІД ПЕРШОЇ ОСОБИ</span>
+      <span class="tag">УКРАЇНСЬКОЮ</span>
+      <span class="tag">ТРІПИ · ВИЖИВАННЯ · АКТ I</span>
+    </div>
+    <h1 class="logo">vv13.<b>legend</b></h1>
+    <div class="slogan">КВ. №8. ОДИН ДЕНЬ 41. ОДНЕ ЗЛО.</div>
+    <div class="art">
+      Харків. Стара п'ятиповерхова хрущовка на околиці. Сімнадцять років тому в її підвалі
+      військова лабораторія «ВВ-13» провела експеримент <i>ROOM-15</i>: п'ятнадцять житлових секцій
+      утримували п'ятнадцять стабільних входів у суміжний вимір. Коли обладнання вимкнули —
+      було вже пізно. Квартири стали світами, а з виміру почало просочуватися те,
+      що документи називають <i>НУЛЬ</i>: воно копіює людей, голоси, спогади і кімнати.
+      <span class="d">Він копіює людей, голоси і кімнати. Він уже десь тут — і він вчиться.</span><br><br>
+      Ти — <i>Лєгенда</i>. Суб'єкт 08. Ти прокидаєшся у квартирі №8 о 16:20 — і годинник більше
+      не працює як раніше. Збери докази. Слухай касети. Не дивись довго у дзеркало.
+      І запам'ятай: часом реальність сходить з розуму — <i>тріпи</i> пересовують меблі,
+      пророщують траву крізь шпалери і випускають тебе надвір. Це не сон. Мабудь.
+    </div>
+  </header>
+
+  <div class="console">
+    <div class="console-head">
+      <div class="model">ІГРОВА ПРИСТАВКА <b>VV-13</b> · СЕРІЯ «ХРУЩОВКА»</div>
+      <div class="leds"><span><span class="led" id="ledPow"></span>POWER</span><span><span class="led" id="ledRun"></span>RUN</span></div>
+    </div>
+    <div class="screen off" id="screen">
+      <div class="poster" id="poster">
+        <div class="p1">vv13.<b>legend</b></div>
+        <div class="p2">АКТ I «ПРОБУДЖЕННЯ» · ДЕНЬ 41 · КВАРТИРА №8</div>
+        <div class="menu"><b>▶ ПОЧАТИ ГРУ</b><br>КЕРУВАННЯ: WASD · МИША · [R] ВЗЯТИ · [B] РЮКЗАК · [J] ЩОДЕННИК<br>НА ТЕЛЕФОНІ: ДЖОЙСТИК ЗЛІВА · СВАЙП СПРАВА · КНОПКИ ВГОРІ СПРАВА</div>
+      </div>
+      <div class="vign"></div>
+    </div>
+    <div class="console-foot">
+      <div class="playbtn" id="play">▶ ГРАТИ</div>
+      <div class="quitbtn" id="quit2">✖ ВИКЛЮЧИТИ</div>
+      <div class="crt">
+        CRT <input type="range" id="crtR" min="0" max="100" value="50">
+        <span class="fsbtn" id="fs">⛶ НА ВЕСЬ ЕКРАН</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="acts">
+    <div class="act"><div class="n">АКТ I</div><div class="t">«ПРОБУДЖЕННЯ»</div>
+      <p>Квартира №8. Документ ВВ-13/03, вісім доказів, дзеркало К2, касета «ЗРАЗОК 08-В»,
+      щиток кладовки — і вихідні двері, які відчиняються лише з ключ-карткою.
+      Акт I — повний цикл гри: день 41, тріпи, виживання, фінал акта.</p></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card"><h3>ОСОБЛИВОСТІ v1.6</h3>
+      <ul>
+        <li><b>ТРІПИ</b> — 6 видів видінь: ТІНІ · ЛЕВІТАЦІЯ · ПРОРОСТАННЯ · ЗСУВ · ВУЛИЦЯ · ЕХО. Меблі переїжджають назавжди, підказки зникають і з'являються на нових місцях, трава проростає на стінах, двері може завалити — до наступного тріпу.</li>
+        <li><b>УДАР БУЛАВОЮ</b> — замах (ЛКМ / [SPACE] / кнопка УДАР) відкидає меблі, що заважає пройти: завалені тріпом двері відкриваються ударом.</li>
+        <li><b>ВИЖИВАННЯ</b> — СИЛИ · ЇЖА · ВОДА · СТРАХ. Крафт у рюкзаку, сон, сидіння, огляд предметів 3D.</li>
+        <li><b>НОЧ</b> — вимикачів більше немає: світло вмикається саме — тускле, різнокольорове, з глітчами. Вдень видно, вночі — ліхтарик.</li>
+        <li>Один день 41 · автопогода (дощ → гроза → туман → сніг) · досягнення · сейви + експорт · геймпад · фото-режим [P].</li>
+      </ul>
+    </div>
+    <div class="card"><h3>КЕРУВАННЯ</h3>
+      <p><span class="k">WASD</span> рух · <span class="k">МИША</span> огляд · <span class="k">SHIFT</span> біг ·
+      <span class="k">R</span> взаємодія · <span class="k">E</span> двері · <span class="k">L</span> ліхтарик (тепл/черв × бл/дал) ·
+      <span class="k">B</span> рюкзак + крафт · <span class="k">J</span> щоденник · <span class="k">C</span> встати ·
+      <span class="k">ESC</span> система · <span class="k">P</span> фото-режим · <span class="k">M</span> звук.<br><br>
+      <b>Телефон:</b> джойстик зліва, свайп справа — огляд, кнопки піднято вгору. Геймпад підтримується.
+      Час іде сам від 16:20. Погода змінюється сама. Звук увімкни — [M].</p>
+    </div>
+  </div>
+
+  <div class="studio">
+    <div class="st-logo">IBONARIUM GAMEWORKS<small>OFFICIAL RELEASE</small></div>
+    <div class="st-info">
+      <b>vv13.legend</b> (VV13.ROOM15) — Акт I «Пробудження» · день 41 у квартирі №8<br>
+      Автор: <b>Viktor Legend Khomenko</b><br>
+      v1.6 · 22.11.2026 · 1 PLAYER · МОДЕЛІ: Poly Haven (CC0) · ЗВУКИ: Freesound (klankbeeld CC-BY та ін.)
+    </div>
+    <div class="st-badges">
+      <span class="badge mature">MATURE 17+</span>
+      <span class="badge">HORROR · SURVIVAL</span>
+      <span class="badge">ONE DAY 41 · HE LEARNS</span>
+    </div>
+  </div>
+
+  <div class="credits">
+    Гра працює з GitHub Pages або локального сервера (python3 -m http.server). Через file:// моделі не завантажаться.
+    ~1 МБ сторінка + моделі. Звук — увімкни [M]. У грі є скрімери і глітчі — не для слабких нервів.
+  </div>
+
+</div>
+
+<div id="stage"><iframe id="gframe" src="about:blank" allowfullscreen allow="autoplay; pointer-lock; fullscreen"></iframe></div>
+
+<script>
+  const stage = document.getElementById('stage');
+  const frame = document.getElementById('gframe');
+  const screenEl = document.getElementById('screen');
+  const quit = document.getElementById('quit');
+  const quit2 = document.getElementById('quit2');
+  const play = document.getElementById('play');
+  const ledPow = document.getElementById('ledPow');
+  const ledRun = document.getElementById('ledRun');
+  function start() {
+    frame.src = 'game.html';
+    stage.classList.add('on');
+    screenEl.classList.remove('off');
+    quit2.classList.add('on');
+    ledPow.classList.add('on');
+    setTimeout(() => ledRun.classList.add('on'), 900);
+    document.body.style.overflow = 'hidden';
+    try { if (stage.requestFullscreen) stage.requestFullscreen(); } catch (e) {}
+    try { frame.focus(); } catch (e) {}
+  }
+  function stop() {
+    frame.src = 'about:blank';
+    stage.classList.remove('on');
+    screenEl.classList.add('off');
+    quit2.classList.remove('on');
+    ledPow.classList.remove('on');
+    ledRun.classList.remove('on');
+    document.body.style.overflow = '';
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+  }
+  play.addEventListener('click', start);
+  quit2.addEventListener('click', stop);
+  quit.addEventListener('click', stop);
+  const crtR = document.getElementById('crtR');
+  crtR.addEventListener('input', () => { screenEl.style.setProperty('--crt', crtR.value / 100); });
+  document.getElementById('fs').addEventListener('click', () => {
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+    else if (stage.requestFullscreen) stage.requestFullscreen();
+  });
+  // клік по вимкненому екрані теж запускає
+  screenEl.addEventListener('click', () => { if (!stage.classList.contains('on')) start(); });
+</script>
+</body>
+</html>
